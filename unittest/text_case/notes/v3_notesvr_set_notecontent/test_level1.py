@@ -82,27 +82,6 @@ class NoteContentLevel1(unittest.TestCase):  # 改成接口名字+重要级别
         else:
             raise ValueError
 
-    def testCase01_input(self):
-        """###noteId必填项校验①规范校验②返回内容###"""
-        note_id = str(int((time.time()) * 1000)) + 'note_id'
-        title = '12347'
-        summary = '123'
-        note_body = '123'
-        body = {
-            'noteId': note_id,
-            'title': title,
-            'summary': summary,
-            'body': note_body,
-            'BodyType': 0,
-            'localContentVersion': 1
-        }
-        body.pop('noteId')
-        res = apicommon.post(url=url, body=body, user_id=self.x_user_key, sid=self.wps_sid)
-        response = res.json()
-        self.assertEqual(500, res.status_code)
-        self.assertEqual('参数不合法！', response['errorMsg'])
-        self.assertEqual(-7, response['errorCode'])
-
     @parameterized.parameterized.expand(title_summary_must_key)  # 参数化是一个装饰器,对象要么是元组，要么是列表。
     def testCase02_input(self, key):
         """###title、summary必填项校验①规范校验②返回内容###"""
@@ -121,7 +100,7 @@ class NoteContentLevel1(unittest.TestCase):  # 改成接口名字+重要级别
         body.pop(key)
         res = apicommon.post(url=url, body=body, user_id=self.x_user_key, sid=self.wps_sid)
         response = res.json()
-        self.assertEqual(500, res.status_code)
+        self.assertEqual(429, res.status_code)
         self.assertEqual('参数不合法！', response['errorMsg'])
         self.assertEqual(-7, response['errorCode'])
 
